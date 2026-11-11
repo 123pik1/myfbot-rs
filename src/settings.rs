@@ -1,9 +1,9 @@
 use std::env;
 
 pub struct Settings {
-    model_name: String,
-    model_url: String,
-    discord_bot_token: String,
+    pub model_name: String,
+    pub model_url: String,
+    pub discord_bot_token: String,
 }
 
 impl Settings {
