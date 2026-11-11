@@ -1,5 +1,5 @@
 mod settings;
 
 fn main() {
-    println!("Hello, world!");
+    let settings = settings::Settings::init();
 }
