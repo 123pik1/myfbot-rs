@@ -5,6 +5,8 @@ edition = "2024"
 
 [dependencies]
 poise = "0.7.1"
+reqwest = { version = "0.13.5", features = ["json"] }
+serde = { version = "1.0.229", features = ["derive"] }
 serenity = "0.12.5"
 
 [dependencies.tokio]
