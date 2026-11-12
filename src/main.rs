@@ -3,8 +3,9 @@ use serenity::{
     all::{GatewayIntents, Http},
 };
 
-use crate::simple_responder::SimpleResponder;
+use crate::{command_responder::CommandResponder, simple_responder::SimpleResponder};
 
+mod command_responder;
 mod settings;
 mod simple_responder;
 
@@ -12,12 +13,11 @@ mod simple_responder;
 async fn main() {
     let settings = settings::Settings::init();
 
-    let http = Http::new(&settings.discord_bot_token);
-
     let intents = GatewayIntents::DIRECT_MESSAGES | GatewayIntents::MESSAGE_CONTENT;
 
     let mut client = Client::builder(&settings.discord_bot_token, intents)
         .event_handler(SimpleResponder)
+        .event_handler(CommandResponder)
         .await
         .expect("Err creating client");
 
