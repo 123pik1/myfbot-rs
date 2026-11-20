@@ -22,6 +22,8 @@ pub async fn ask(
 ) -> Result<(), Error> {
     ctx.defer().await?;
 
+    println!("User {} asked ollama", ctx.author().name);
+
     let data = ctx.data();
 
     let response = ask_ollama(
@@ -34,8 +36,10 @@ pub async fn ask(
 
     if let Some(res) = response {
         ctx.say(res.response).await?;
+        println!("Bot responded");
     } else {
         ctx.say("Error during calling ollama model").await?;
+        println!("Bot encountered error calling ollama");
     }
 
     Ok(())
