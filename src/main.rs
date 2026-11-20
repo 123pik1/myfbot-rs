@@ -5,6 +5,7 @@ use crate::{data::Data, simple_responder::SimpleResponder};
 mod command_responder;
 // Struct which will be accessible globally
 mod data;
+mod ollama;
 mod settings;
 mod simple_responder;
 

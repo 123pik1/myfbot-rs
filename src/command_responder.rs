@@ -18,5 +18,7 @@ pub async fn ask(
     ctx: Context<'_>,
     #[description = "Prompt to local chatbot"] prompt: String,
 ) -> Result<(), Error> {
+    ctx.defer().await?;
+
     Ok(())
 }
