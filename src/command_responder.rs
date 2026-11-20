@@ -1,4 +1,7 @@
-use crate::data::{Context, Error};
+use crate::{
+    data::{Context, Error},
+    ollama::ask_ollama,
+};
 use serenity::all::User;
 
 #[poise::command(slash_command, prefix_command)]
@@ -18,6 +21,22 @@ pub async fn ask(
     #[description = "Prompt to local chatbot"] prompt: String,
 ) -> Result<(), Error> {
     ctx.defer().await?;
+
+    let data = ctx.data();
+
+    let response = ask_ollama(
+        data.settings.model_url.clone(),
+        data.settings.model_name.clone(),
+        prompt,
+        None,
+    )
+    .await;
+
+    if let Some(res) = response {
+        ctx.say(res.response).await?;
+    } else {
+        ctx.say("Error during calling ollama model").await?;
+    }
 
     Ok(())
 }

@@ -13,7 +13,7 @@ const OLLAMA_SYSTEM_PROMPT: &str =
 const OLLAMA_TIMEOUT: u64 = 900;
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct OllamaRequest {
+struct OllamaRequest {
     pub model: String,
     pub prompt: String,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -59,7 +59,7 @@ pub struct OllamaResponse {
     pub eval_duration: Option<u64>,
 }
 
-pub fn ask_ollama(
+pub async fn ask_ollama(
     ollama_address: String,
     model: String,
     prompt: String,
@@ -71,18 +71,18 @@ pub fn ask_ollama(
         OllamaRequest::new(model, OLLAMA_SYSTEM_PROMPT.to_string(), prompt)
     };
 
-    let client = reqwest::blocking::Client::builder()
+    let url = if ollama_address.ends_with("/api/generate") {
+        ollama_address
+    } else {
+        format!("{}/api/generate", ollama_address.trim_end_matches('/'))
+    };
+
+    let client = reqwest::Client::builder()
         .timeout(Duration::from_secs(OLLAMA_TIMEOUT))
         .build()
         .ok()?;
 
-    let response = client
-        .post(ollama_address)
-        .body(serde_json::to_string(&request).ok()?)
-        .send()
-        .ok()?;
+    let response = client.post(url).json(&request).send().await.ok()?;
 
-    let resp_body = response.text().ok()?;
-
-    serde_json::from_str(&resp_body).ok()?
+    response.json::<OllamaResponse>().await.ok()
 }
