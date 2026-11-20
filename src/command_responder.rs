@@ -1,5 +1,4 @@
 use crate::data::{Context, Error};
-use poise::Context;
 use serenity::all::User;
 
 #[poise::command(slash_command, prefix_command)]
